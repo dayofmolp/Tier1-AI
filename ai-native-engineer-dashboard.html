@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Native Engineer Tiers</title>
+    <style>
+        :root {
+            --primary: #2a2f4f;
+            --secondary: #4a5568;
+            --accent: #6366f1;
+            --accent-light: #818cf8;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, #4338ca 100%);
+            padding: 2.5rem;
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            transform: rotate(-45deg);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        header p {
+            max-width: 800px;
+            font-size: 1.1rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .cta-button {
+            position: relative;
+            display: inline-block;
+            background-color: white;
+            color: var(--primary);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .tier-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tier-card {
+            background-color: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .tier-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .tier-header {
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tier-content {
+            padding: 1.5rem;
+        }
+
+        .tier-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .tier-1 .tier-header {
+            background: linear-gradient(135deg, var(--accent) 0%, #4f46e5 100%);
+            color: white;
+        }
+
+        .tier-2 .tier-header {
+            background: linear-gradient(135deg, var(--info) 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .tier-3 .tier-header {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+        }
+
+        .tier-4 .tier-header {
+            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+            color: white;
+        }
+
+        .tier-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .tier-subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .feature-list {
+            list-style-type: none;
+            margin-top: 1rem;
+        }
+
+        .feature-list li {
+            margin-bottom: 0.75rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .feature-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #e2e8f0;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 100px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        .tech-stack-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .tech-stack-table th, .tech-stack-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .tech-stack-table th {
+            background-color: #f8fafc;
+            font-weight: 600;
+        }
+
+        .tech-stack-table tbody tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        .ai-friendliness {
+            display: inline-block;
+            background-color: #dbeafe;
+            color: var(--info);
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .blueprint {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .blueprint-step {
+            background-color: #f8fafc;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent);
+        }
+
+        .blueprint-step h4 {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .file-tree {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            font-family: 'Fira Code', monospace;
+            line-height: 1.7;
+        }
+
+        .file-tree .folder {
+            color: #60a5fa;
+        }
+
+        .file-tree .file {
+            color: #cbd5e1;
+        }
+
+        .prompt-template {
+            background-color: #f8fafc;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .prompt-template h4 {
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .prompt-example {
+            background-color: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 0.75rem;
+            font-style: italic;
+            color: var(--secondary);
+        }
+
+        .cognitive-shift {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .mindset-card {
+            background-color: #f8fafc;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            border-top: 4px solid var(--accent);
+        }
+
+        .mindset-card h4 {
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            color: var(--secondary);
+            font-size: 0.875rem;
+        }
+
+        .progress-container {
+            margin-top: 2rem;
+        }
+
+        .progress-title {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .tier-1-progress {
+            background: linear-gradient(135deg, var(--accent) 0%, #4f46e5 100%);
+        }
+
+        .tier-2-progress {
+            background: linear-gradient(135deg, var(--info) 0%, #2563eb 100%);
+        }
+
+        .tier-3-progress {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+        }
+
+        .tier-4-progress {
+            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+        }
+
+        @media (max-width: 768px) {
+            .tier-grid, .blueprint, .cognitive-shift {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard {
+                padding: 1rem;
+            }
+            
+            header {
+                padding: 1.5rem;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <header>
+            <h1>AI-Native Engineering Tiers</h1>
+            <p>Navigate the spectrum of AI proficiency, from casual users to strategic operators capable of building full-scale production systems through AI prompting and orchestration.</p>
+            <a href="#tier-1" class="cta-button">Explore Tier 1 Engineers</a>
+        </header>
+
+        <div class="tier-grid">
+            <div class="tier-card tier-1" id="tier-1">
+                <div class="tier-header">
+                    <span class="tier-badge">Advanced</span>
+                    <h3 class="tier-title">Tier 1</h3>
+                    <p class="tier-subtitle">AI-Native Engineers / Strategic Operators</p>
+                </div>
+                <div class="tier-content">
+                    <ul class="feature-list">
+                        <li>Produce full-scale, production-ready systems with minimal manual coding</li>
+                        <li>Leverage AI for the entire software development lifecycle</li>
+                        <li>Create autonomous AI systems capable of self-maintenance</li>
+                        <li>Master advanced AI agent frameworks and prompt engineering</li>
+                        <li>Build AI-native applications with continuous learning capabilities</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tier-card tier-2">
+                <div class="tier-header">
+                    <span class="tier-badge">Intermediate</span>
+                    <h3 class="tier-title">Tier 2</h3>
+                    <p class="tier-subtitle">Builder-Operators</p>
+                </div>
+                <div class="tier-content">
+                    <ul class="feature-list">
+                        <li>Build functional frontends with AI assistance</li>
+                        <li>Automate business processes with AI tools</li>
+                        <li>Integrate different software components</li>
+                        <li>Use LLMs for generating substantial portions of applications</li>
+                        <li>Human-defined architecture with AI implementation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tier-card tier-3">
+                <div class="tier-header">
+                    <span class="tier-badge">Basic</span>
+                    <h3 class="tier-title">Tier 3</h3>
+                    <p class="tier-subtitle">Productivity Users</p>
+                </div>
+                <div class="tier-content">
+                    <ul class="feature-list">
+                        <li>Enhance daily productivity tasks</li>
+                        <li>Writing assistance and light automation</li>
+                        <li>Data manipulation within spreadsheets</li>
+                        <li>No-code platforms for workflow streamlining</li>
+                        <li>AI as a creative partner for brainstorming</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tier-card tier-4">
+                <div class="tier-header">
+                    <span class="tier-badge">Entry</span>
+                    <h3 class="tier-title">Tier 4</h3>
+                    <p class="tier-subtitle">Casual Users</p>
+                </div>
+                <div class="tier-content">
+                    <ul class="feature-list">
+                        <li>Infrequent, ad-hoc queries</li>
+                        <li>One-off questions and informational needs</li>
+                        <li>Basic summaries of information</li>
+                        <li>Web interfaces of general-purpose LLMs</li>
+                        <li>Similar to using a search engine with NLP capabilities</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <section class="section">
+            <h2 class="section-title">The AI-Native Tech Stack</h2>
+            <p>A fully AI-operable tech stack that can be generated, scaffolded, and maintained primarily through AI prompting.</p>
+            
+            <table class="tech-stack-table">
+                <thead>
+                    <tr>
+                        <th>Tool</th>
+                        <th>Category</th>
+                        <th>AI-Friendliness</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>LangChain/LangGraph</td>
+                        <td>AI Workflow Orchestration</td>
+                        <td><span class="ai-friendliness">Extensive integrations with LLMs and tools</span></td>
+                    </tr>
+                    <tr>
+                        <td>Vercel</td>
+                        <td>Hosting & Deployment</td>
+                        <td><span class="ai-friendliness">Native AI SDK; serverless functions</span></td>
+                    </tr>
+                    <tr>
+                        <td>Supabase</td>
+                        <td>Backend & Database</td>
+                        <td><span class="ai-friendliness">Postgres with pgvector support; AI features</span></td>
+                    </tr>
+                    <tr>
+                        <td>Autogen</td>
+                        <td>AI Agent Framework</td>
+                        <td><span class="ai-friendliness">Multi-agent systems; prompt-based agents</span></td>
+                    </tr>
+                    <tr>
+                        <td>LLM Providers</td>
+                        <td>AI Models</td>
+                        <td><span class="ai-friendliness">Wide range of models (OpenAI, Gemini, Claude)</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Starter Blueprint: From Idea to Production</h2>
+            <p>An end-to-end product development example using AI-native engineering principles: AI-powered meeting summarizer micro-SaaS.</p>
+            
+            <div class="blueprint">
+                <div>
+                    <div class="blueprint-step">
+                        <h4>Product Idea</h4>
+                        <p>An AI-powered micro-SaaS platform that automatically transcribes and summarizes meetings from audio recordings with considerations for scalability, security, and cost-effectiveness.</p>
+                    </div>
+                    
+                    <div class="blueprint-step">
+                        <h4>Initial Prompt Structure</h4>
+                        <p>"You are a senior software architect. Design a micro-SaaS platform that automatically transcribes and summarizes meetings from audio recordings..."</p>
+                    </div>
+                    
+                    <div class="blueprint-step">
+                        <h4>Deployment (AI-Prompted)</h4>
+                        <p>Deploy the frontend and serverless functions to Vercel using AI-generated deployment commands and configurations.</p>
+                    </div>
+                    
+                    <div class="blueprint-step">
+                        <h4>Monitoring & Testing (AI-Driven)</h4>
+                        <p>Set up monitoring using Vercel analytics and LangSmith. Generate test data and analyze results with AI assistance.</p>
+                    </div>
+                </div>
+                
+                <div class="file-tree">
+                    <div><span class="folder">📂 frontend/</span> - Next.js UI with Vercel AI SDK</div>
+                    <div><span class="folder">📂 backend/</span> - Serverless functions for audio processing</div>
+                    <div><span class="folder">📂 database/</span> - Supabase schema with Row Level Security</div>
+                    <div><span class="folder">📂 agents/</span> - Autogen agents for meeting processing:
+                        <div>├── <span class="file">Transcriber agent</span></div>
+                        <div>├── <span class="file">Summarizer agent</span></div>
+                        <div>└── <span class="file">Quality Checker agent</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">The Tier 1 Prompt System Template</h2>
+            <p>Specific prompting techniques to guide AI effectively in system development:</p>
+            
+            <div class="prompt-template">
+                <h4>Role Prompting</h4>
+                <p>Instructing the LLM to assume the role of a specific expert.</p>
+                <div class="prompt-example">
+                    "You are a senior backend engineer with extensive experience in building scalable APIs. Design the API endpoints for the meeting summarizer platform..."
+                </div>
+            </div>
+            
+            <div class="prompt-template">
+                <h4>Agent-Loop Prompting</h4>
+                <p>Iterative approach involving generation, testing, and improvement in a loop.</p>
+                <div class="prompt-example">
+                    "Generate the code for transcribing the audio file. Test the transcription with a sample audio file. If there are errors, identify the issues, improve the code, and repeat..."
+                </div>
+            </div>
+            
+            <div class="prompt-template">
+                <h4>Multi-Agent Orchestration</h4>
+                <p>Coordinating multiple specialized agents to achieve complex tasks.</p>
+                <div class="prompt-example">
+                    "Orchestrate the following agents to process a meeting recording: Agent 1 (Transcriber), Agent 2 (Summarizer), Agent 3 (Quality Checker)..."
+                </div>
+            </div>
+            
+            <div class="prompt-template">
+                <h4>System-Level Planning</h4>
+                <p>Designing the overall architecture considering scalability, reliability, and cost.</p>
+                <div class="prompt-example">
+                    "Design a distributed architecture for handling a large volume of concurrent meeting recordings, considering potential bottlenecks and scaling strategies..."
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">The Cognitive Shift: Mental Models for AI-Native Engineering</h2>
+            <p>A fundamental shift in how to approach software development and system building with AI.</p>
+            
+            <div class="cognitive-shift">
+                <div class="mindset-card">
+                    <h4>Thinking like an AI-native architect</h4>
+                    <p>Shift from dictating every line of code to defining desired outcomes and constraints. Focus on clear articulation of the problem and requirements, allowing AI to handle implementation details.</p>
+                </div>
+                
+                <div class="mindset-card">
+                    <h4>Reducing idea → design → build latency</h4>
+                    <p>Leverage AI's rapid prototyping capabilities to quickly translate ideas into functional systems through iterative development and continuous feedback loops.</p>
+                </div>
+                
+                <div class="mindset-card">
+                    <h4>Interacting with LLMs as collaborators</h4>
+                    <p>Treat LLMs as intelligent partners capable of contributing significantly to the development process through detailed conversations and clear contextual instructions.</p>
+                </div>
+                
+                <div class="mindset-card">
+                    <h4>Auditing and testing AI output</h4>
+                    <p>Implement robust testing strategies to thoroughly verify AI-generated code, especially for mission-critical applications, using both AI-powered testing tools and manual review processes.</p>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-title">
+                    <span>Progress to becoming a Tier 1 AI-Native Engineer</span>
+                    <span>65%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill tier-1-progress" style="width: 65%"></div>
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            © 2025 AI-Native Engineering Framework | Designed for the future of autonomous systems
+        </footer>
+    </div>
+
+    <script>
+        // Animate the progress bars on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 300);
+            });
+        });
+
+        // Smooth scroll to sections
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                window.scrollTo({
+                    top: target.offsetTop - 20,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
