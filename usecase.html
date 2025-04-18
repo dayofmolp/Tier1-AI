@@ -5,19 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI-Native Engineer - Use Cases</title>
     <style>
+        /* --- Core Variables (from index.html) --- */
         :root {
             --primary: #2a2f4f;
             --secondary: #4a5568;
-            --accent: #6366f1;
+            --accent: #6366f1; /* Used for magic line */
             --accent-light: #818cf8;
-            --light: #f8fafc;
-            --dark: #1e293b;
+            --light: #f8fafc; /* Used for nav background */
+            --dark: #1e293b; /* Used for nav text */
             --success: #10b981;
             --warning: #f59e0b;
             --info: #3b82f6;
             --danger: #ef4444;
+            --nav-height: 70px; /* Define nav height for offsets */
+            --nav-scroll-bg: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
+            --nav-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
+        /* --- Base Styles (from index.html) --- */
         * {
             margin: 0;
             padding: 0;
@@ -25,16 +30,144 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
 
+        /* Add scroll-padding-top to prevent fixed nav from covering content (if needed on this page) */
+        html {
+            /* scroll-padding-top: var(--nav-height); */ /* Only needed if there are internal links to scroll to */
+            scroll-behavior: smooth; /* Ensure smooth scroll works */
+        }
+
         body {
             background-color: #f1f5f9;
             color: var(--dark);
             line-height: 1.6;
-            padding: 2rem;
+            padding-top: var(--nav-height); /* Add padding to body to offset fixed nav */
         }
 
+        /* --- Navigation Bar Styles (from index.html) --- */
+        .main-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--nav-height);
+            background-color: transparent; /* Start transparent */
+            z-index: 1000;
+            transition: background-color 0.4s ease, box-shadow 0.4s ease;
+            border-bottom: 1px solid transparent; /* For subtle separation */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .main-nav.scrolled {
+            background-color: var(--nav-scroll-bg);
+            backdrop-filter: blur(8px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(8px); /* Safari support */
+            box-shadow: var(--nav-shadow);
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 2rem; /* Match dashboard padding */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative; /* Needed for magic line positioning */
+        }
+
+        .nav-logo a {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .main-nav.scrolled .nav-logo a {
+             color: var(--primary); /* Keep logo color consistent */
+        }
+        .nav-logo a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 1rem; /* Spacing between links */
+            position: relative; /* Context for magic line */
+        }
+
+        .nav-links li {
+            position: relative;
+        }
+
+        .nav-links a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0.75rem;
+            display: block;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active-link { /* Style for hover and active */
+            color: var(--primary);
+        }
+
+        /* Magic Line */
+        .magic-line {
+            position: absolute;
+            bottom: -2px; /* Position slightly below the links */
+            left: 0; /* Initial position controlled by JS */
+            height: 3px;
+            background-color: var(--accent);
+            border-radius: 3px;
+            transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smooth sliding */
+            width: 0; /* Initial width controlled by JS */
+            pointer-events: none; /* Don't interfere with clicks */
+            opacity: 0; /* Start hidden until positioned */
+        }
+
+        /* Hamburger Menu Button */
+        .nav-toggle {
+            display: none; /* Hidden on desktop */
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 1010; /* Above nav links when mobile menu is open */
+        }
+
+        .nav-toggle span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 3px;
+            margin: 5px 0;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Hamburger animation */
+        .nav-toggle.active span:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+        .nav-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .nav-toggle.active span:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+        /* --- End Navigation Bar Styles --- */
+
+
+        /* --- Original Use Case Page Styles --- */
         .use-cases-container {
             max-width: 1400px;
             margin: 0 auto;
+            padding: 2rem; /* Padding for the content area itself */
         }
 
         .page-header {
@@ -42,7 +175,7 @@
             position: relative;
             overflow: hidden;
             border-radius: 1rem;
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); /* Use accent color */
             padding: 2.5rem;
             color: white;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
@@ -59,7 +192,7 @@
             max-width: 800px;
             font-size: 1.1rem;
             font-weight: 300;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.5rem; /* Adjusted from original */
             position: relative;
         }
 
@@ -87,25 +220,14 @@
             padding: 1.5rem;
             position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, var(--accent) 0%, #4f46e5 100%);
             color: white;
         }
+        /* Industry specific headers */
+        .fintech-header { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); }
+        .healthcare-header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .ecommerce-header { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .media-header { background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); }
 
-        .fintech-header {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-        }
-
-        .healthcare-header {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        }
-
-        .ecommerce-header {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        }
-
-        .media-header {
-            background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
-        }
 
         .industry-badge {
             position: absolute;
@@ -118,170 +240,143 @@
             font-weight: 600;
         }
 
-        .case-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
+        .case-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .case-subtitle { font-size: 1rem; opacity: 0.8; }
+        .case-study-content { padding: 1.5rem; }
+        .case-study-content p:first-of-type { margin-bottom: 1rem; } /* Added margin */
 
-        .case-subtitle {
-            font-size: 1rem;
-            opacity: 0.8;
-        }
+        .impact-metrics { display: flex; justify-content: space-between; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0; }
+        .metric { text-align: center; }
+        .metric-value { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem; }
+        /* Industry specific values */
+        .fintech-value { color: #3b82f6; }
+        .healthcare-value { color: #10b981; }
+        .ecommerce-value { color: #f59e0b; }
+        .media-value { color: #ec4899; }
+        .metric-label { font-size: 0.875rem; color: var(--secondary); }
 
-        .case-study-content {
-            padding: 1.5rem;
-        }
+        .complexity-container { margin-top: 1rem; }
+        .complexity-label { display: flex; justify-content: space-between; margin-bottom: 0.25rem; font-size: 0.875rem; }
+        .complexity-label span:last-child { font-weight: 600; }
+        .complexity-bar { height: 6px; background-color: #e2e8f0; border-radius: 3px; overflow: hidden; }
+        .complexity-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease-out; /* Added transition */ } /* Added transition */
+         /* Industry specific fills */
+        .fintech-fill { background-color: #3b82f6; }
+        .healthcare-fill { background-color: #10b981; }
+        .ecommerce-fill { background-color: #f59e0b; }
+        .media-fill { background-color: #ec4899; }
 
-        .impact-metrics {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #e2e8f0;
-        }
 
-        .metric {
-            text-align: center;
-        }
+        .techniques-section { background-color: white; border-radius: 1rem; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 2px solid #e2e8f0; position: relative; }
+        .section-title::after { content: ""; position: absolute; left: 0; bottom: -2px; width: 100px; height: 2px; background-color: var(--accent); }
+        .techniques-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+        .technique-card { background-color: #f8fafc; border-radius: 0.75rem; padding: 1.5rem; border-left: 4px solid var(--accent); }
+        .technique-card h3 { margin-bottom: 0.75rem; color: var(--primary); }
 
-        .metric-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 0.25rem;
-        }
+        /* --- Responsive Styles (Combined) --- */
+        @media (max-width: 992px) { /* Breakpoint for nav change */
+            .nav-container {
+                padding: 0 1rem; /* Reduce padding */
+            }
+             .nav-toggle {
+                display: block; /* Show hamburger */
+            }
 
-        .fintech-value {
-            color: #3b82f6;
-        }
+            .nav-links {
+                position: fixed; /* Take over screen */
+                top: var(--nav-height); /* Start below nav bar */
+                left: 0;
+                width: 100%;
+                height: calc(100vh - var(--nav-height)); /* Full height minus nav */
+                background-color: var(--light); /* Solid background */
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start; /* Align items top */
+                padding-top: 3rem;
+                gap: 1.5rem;
+                transform: translateX(100%); /* Start off-screen */
+                transition: transform 0.4s ease-in-out;
+                overflow-y: auto; /* Allow scrolling if needed */
+            }
 
-        .healthcare-value {
-            color: #10b981;
-        }
+            .nav-links.active {
+                transform: translateX(0); /* Slide in */
+            }
 
-        .ecommerce-value {
-            color: #f59e0b;
-        }
+             .nav-links a {
+                font-size: 1.2rem; /* Larger text for mobile */
+                color: var(--primary); /* Darker text on light bg */
+            }
 
-        .media-value {
-            color: #ec4899;
-        }
-
-        .metric-label {
-            font-size: 0.875rem;
-            color: var(--secondary);
-        }
-
-        .complexity-container {
-            margin-top: 1rem;
-        }
-
-        .complexity-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.25rem;
-            font-size: 0.875rem;
-        }
-
-        .complexity-label span:last-child {
-            font-weight: 600;
-        }
-
-        .complexity-bar {
-            height: 6px;
-            background-color: #e2e8f0;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .complexity-fill {
-            height: 100%;
-            border-radius: 3px;
-            background-color: var(--accent);
-        }
-
-        .fintech-fill {
-            background-color: #3b82f6;
-        }
-
-        .healthcare-fill {
-            background-color: #10b981;
-        }
-
-        .ecommerce-fill {
-            background-color: #f59e0b;
-        }
-
-        .media-fill {
-            background-color: #ec4899;
-        }
-
-        .techniques-section {
-            background-color: white;
-            border-radius: 1rem;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid #e2e8f0;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: -2px;
-            width: 100px;
-            height: 2px;
-            background-color: var(--accent);
-        }
-
-        .techniques-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .technique-card {
-            background-color: #f8fafc;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            border-left: 4px solid var(--accent);
-        }
-
-        .technique-card h3 {
-            margin-bottom: 0.75rem;
-            color: var(--primary);
+            .magic-line {
+                display: none; /* Hide magic line on mobile */
+            }
+             /* Prevent body scroll when mobile menu is open */
+             body.nav-open {
+                 overflow: hidden;
+             }
         }
 
         @media (max-width: 768px) {
-            .case-studies-grid, .techniques-grid {
-                grid-template-columns: 1fr;
-            }
-            
+             html {
+                 /* Adjust scroll padding if nav height changes on mobile, otherwise keep it */
+                 /* scroll-padding-top: var(--nav-height); */
+             }
+             body {
+                 padding-top: var(--nav-height);
+             }
+
+            /* Adjust content padding */
             .use-cases-container {
                 padding: 1rem;
             }
-            
             .page-header {
                 padding: 1.5rem;
             }
-            
             .page-header h1 {
                 font-size: 2rem;
             }
+             /* Adjust nav container padding again if needed */
+             .nav-container {
+                 padding: 0 1rem;
+             }
+
+            /* Adjust grids */
+             .case-studies-grid, .techniques-grid {
+                grid-template-columns: 1fr;
+            }
+            .impact-metrics {
+                flex-direction: column; /* Stack metrics vertically */
+                gap: 1rem; /* Add gap between stacked metrics */
+                align-items: center; /* Center stacked metrics */
+            }
         }
+         /* --- End Responsive Styles --- */
+
     </style>
 </head>
 <body>
+
+    <nav class="main-nav" id="mainNav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">AINative</a>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                 <span class="magic-line" id="magicLine"></span>
+                 <li><a href="index.html#tier-1" class="nav-link">Tiers</a></li>
+                 <li><a href="usecase.html" class="nav-link">Use Case</a></li> <li><a href="index.html#tech-stack-section" class="nav-link">Stack</a></li>
+                 <li><a href="index.html#blueprint-section" class="nav-link">Blueprint</a></li>
+                 <li><a href="index.html#cognitive-shift-section" class="nav-link">Mindset</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
     <div class="use-cases-container">
         <div class="page-header">
             <h1>AI-Native Engineering: Use Cases & Industry Applications</h1>
@@ -297,30 +392,14 @@
                 </div>
                 <div class="case-study-content">
                     <p>A Tier 1 AI-Native Engineer developed a comprehensive trading platform where multiple specialized AI agents collaborate to analyze market data, identify trading opportunities, and execute trades with minimal human oversight.</p>
-                    
                     <div class="complexity-container">
-                        <div class="complexity-label">
-                            <span>System Complexity</span>
-                            <span>Advanced</span>
-                        </div>
-                        <div class="complexity-bar">
-                            <div class="complexity-fill fintech-fill" style="width: 85%"></div>
-                        </div>
+                        <div class="complexity-label"><span>System Complexity</span><span>Advanced</span></div>
+                        <div class="complexity-bar"><div class="complexity-fill fintech-fill" style="width: 85%"></div></div>
                     </div>
-                    
                     <div class="impact-metrics">
-                        <div class="metric">
-                            <div class="metric-value fintech-value">92%</div>
-                            <div class="metric-label">Development Time Reduction</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value fintech-value">4.5x</div>
-                            <div class="metric-label">ROI Increase</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value fintech-value">78%</div>
-                            <div class="metric-label">Operational Efficiency</div>
-                        </div>
+                        <div class="metric"><div class="metric-value fintech-value">92%</div><div class="metric-label">Development Time Reduction</div></div>
+                        <div class="metric"><div class="metric-value fintech-value">4.5x</div><div class="metric-label">ROI Increase</div></div>
+                        <div class="metric"><div class="metric-value fintech-value">78%</div><div class="metric-label">Operational Efficiency</div></div>
                     </div>
                 </div>
             </div>
@@ -333,30 +412,14 @@
                 </div>
                 <div class="case-study-content">
                     <p>A medical technology startup employed a Tier 1 AI-Native Engineer to build a diagnostic assistant that integrates with electronic health records, analyzes patient symptoms, suggests possible diagnoses, and recommends further tests.</p>
-                    
                     <div class="complexity-container">
-                        <div class="complexity-label">
-                            <span>System Complexity</span>
-                            <span>High</span>
-                        </div>
-                        <div class="complexity-bar">
-                            <div class="complexity-fill healthcare-fill" style="width: 80%"></div>
-                        </div>
+                        <div class="complexity-label"><span>System Complexity</span><span>High</span></div>
+                        <div class="complexity-bar"><div class="complexity-fill healthcare-fill" style="width: 80%"></div></div>
                     </div>
-                    
                     <div class="impact-metrics">
-                        <div class="metric">
-                            <div class="metric-value healthcare-value">65%</div>
-                            <div class="metric-label">Diagnostic Time Saved</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value healthcare-value">3.2x</div>
-                            <div class="metric-label">Development Speed</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value healthcare-value">87%</div>
-                            <div class="metric-label">Data Processing Accuracy</div>
-                        </div>
+                        <div class="metric"><div class="metric-value healthcare-value">65%</div><div class="metric-label">Diagnostic Time Saved</div></div>
+                        <div class="metric"><div class="metric-value healthcare-value">3.2x</div><div class="metric-label">Development Speed</div></div>
+                        <div class="metric"><div class="metric-value healthcare-value">87%</div><div class="metric-label">Data Processing Accuracy</div></div>
                     </div>
                 </div>
             </div>
@@ -369,30 +432,14 @@
                 </div>
                 <div class="case-study-content">
                     <p>An e-commerce platform revolutionized their customer experience by implementing an AI-native system that personalizes the shopping journey, predicts inventory needs, and automates marketing campaigns based on real-time customer behavior.</p>
-                    
                     <div class="complexity-container">
-                        <div class="complexity-label">
-                            <span>System Complexity</span>
-                            <span>Medium-High</span>
-                        </div>
-                        <div class="complexity-bar">
-                            <div class="complexity-fill ecommerce-fill" style="width: 70%"></div>
-                        </div>
+                        <div class="complexity-label"><span>System Complexity</span><span>Medium-High</span></div>
+                        <div class="complexity-bar"><div class="complexity-fill ecommerce-fill" style="width: 70%"></div></div>
                     </div>
-                    
                     <div class="impact-metrics">
-                        <div class="metric">
-                            <div class="metric-value ecommerce-value">46%</div>
-                            <div class="metric-label">Conversion Rate Increase</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value ecommerce-value">2.8x</div>
-                            <div class="metric-label">Feature Release Speed</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value ecommerce-value">31%</div>
-                            <div class="metric-label">Inventory Cost Reduction</div>
-                        </div>
+                        <div class="metric"><div class="metric-value ecommerce-value">46%</div><div class="metric-label">Conversion Rate Increase</div></div>
+                        <div class="metric"><div class="metric-value ecommerce-value">2.8x</div><div class="metric-label">Feature Release Speed</div></div>
+                        <div class="metric"><div class="metric-value ecommerce-value">31%</div><div class="metric-label">Inventory Cost Reduction</div></div>
                     </div>
                 </div>
             </div>
@@ -405,34 +452,18 @@
                 </div>
                 <div class="case-study-content">
                     <p>A media company implemented an AI-native content creation system that generates, edits, and distributes multimedia content across various platforms, optimizing for audience engagement and performance metrics in real-time.</p>
-                    
                     <div class="complexity-container">
-                        <div class="complexity-label">
-                            <span>System Complexity</span>
-                            <span>Medium</span>
-                        </div>
-                        <div class="complexity-bar">
-                            <div class="complexity-fill media-fill" style="width: 65%"></div>
-                        </div>
+                        <div class="complexity-label"><span>System Complexity</span><span>Medium</span></div>
+                        <div class="complexity-bar"><div class="complexity-fill media-fill" style="width: 65%"></div></div>
                     </div>
-                    
                     <div class="impact-metrics">
-                        <div class="metric">
-                            <div class="metric-value media-value">320%</div>
-                            <div class="metric-label">Content Output Increase</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value media-value">4.1x</div>
-                            <div class="metric-label">Production Speed</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value media-value">58%</div>
-                            <div class="metric-label">Engagement Boost</div>
-                        </div>
+                        <div class="metric"><div class="metric-value media-value">320%</div><div class="metric-label">Content Output Increase</div></div>
+                        <div class="metric"><div class="metric-value media-value">4.1x</div><div class="metric-label">Production Speed</div></div>
+                        <div class="metric"><div class="metric-value media-value">58%</div><div class="metric-label">Engagement Boost</div></div>
                     </div>
                 </div>
             </div>
-        </div>
+            </div>
 
         <div class="techniques-section">
             <h2 class="section-title">Cross-Industry AI-Native Techniques</h2>
@@ -441,27 +472,22 @@
                     <h3>Multi-Agent Process Automation</h3>
                     <p>Implementing collaborative AI agent networks that handle complex business processes through specialized roles and coordinated workflows, reducing human intervention while maintaining high accuracy.</p>
                 </div>
-                
                 <div class="technique-card">
                     <h3>Self-Optimizing Systems</h3>
                     <p>Building applications that continuously learn from usage patterns and operational data to improve performance, adapt to changing conditions, and optimize resource allocation without manual reconfiguration.</p>
                 </div>
-                
                 <div class="technique-card">
                     <h3>Natural Language Infrastructure</h3>
                     <p>Creating infrastructure and system components through natural language instructions, enabling rapid iteration and modification without traditional coding, while maintaining enterprise-grade reliability.</p>
                 </div>
-                
                 <div class="technique-card">
                     <h3>Autonomous Data Pipeline Engineering</h3>
                     <p>Designing data ingestion, transformation, and analysis pipelines that self-configure based on incoming data characteristics, automatically adapting to schema changes and new data sources.</p>
                 </div>
-                
                 <div class="technique-card">
                     <h3>Context-Aware Integration Systems</h3>
                     <p>Developing intelligent integration layers that understand the semantic meaning of data across disparate systems, enabling seamless communication without traditional API development overhead.</p>
                 </div>
-                
                 <div class="technique-card">
                     <h3>Predictive Experience Design</h3>
                     <p>Implementing systems that anticipate user needs and dynamically restructure interfaces and workflows based on behavioral patterns and contextual information.</p>
@@ -471,16 +497,151 @@
     </div>
 
     <script>
-        // Animate complexity bars on load
-        document.addEventListener('DOMContentLoaded', function() {
+         document.addEventListener('DOMContentLoaded', function() {
+            // --- Animate complexity bars ---
             const complexityBars = document.querySelectorAll('.complexity-fill');
             complexityBars.forEach(bar => {
-                const width = bar.style.width;
-                bar.style.width = '0';
+                const width = bar.style.width; // Read target width from inline style
+                bar.style.width = '0'; // Start at 0
+                // Use setTimeout to allow the transition to happen
                 setTimeout(() => {
-                    bar.style.width = width;
-                }, 300);
+                    bar.style.width = width; // Animate to target width
+                }, 300); // Small delay to ensure initial state is rendered
             });
+
+            // --- Navigation Logic (Adapted from index.html) ---
+            const mainNav = document.getElementById('mainNav');
+            const navToggle = document.getElementById('navToggle');
+            const navLinksContainer = document.getElementById('navLinks');
+            const navLinks = navLinksContainer.querySelectorAll('.nav-link');
+            const magicLine = document.getElementById('magicLine');
+
+            // Determine the active link for *this* page
+            let activeLink = navLinksContainer.querySelector('a.nav-link[href="usecase.html"]');
+            if (activeLink) {
+                activeLink.classList.add('active-link'); // Ensure it has the class
+            } else {
+                // Fallback or default if needed, maybe the first link?
+                // activeLink = navLinks[0];
+                // if(activeLink) activeLink.classList.add('active-link');
+                 console.warn("Could not find the active link for usecase.html");
+            }
+
+
+            // --- Navbar Scroll Effect ---
+            const scrollThreshold = 50;
+            function handleScroll() {
+                if (window.scrollY > scrollThreshold) {
+                    mainNav.classList.add('scrolled');
+                } else {
+                    mainNav.classList.remove('scrolled');
+                }
+            }
+             // Throttle scroll handler for performance
+            let scrollTimeout;
+            window.addEventListener('scroll', () => {
+                if (scrollTimeout) {
+                    window.cancelAnimationFrame(scrollTimeout);
+                }
+                scrollTimeout = window.requestAnimationFrame(handleScroll);
+            }, { passive: true });
+            handleScroll(); // Initial check
+
+            // --- Magic Line Logic ---
+             function moveMagicLine(targetLink) {
+                if (!magicLine || window.innerWidth <= 992) {
+                     if(magicLine) magicLine.style.width = '0'; // Hide line on mobile/if target is null
+                    return;
+                 }
+                if (!targetLink) {
+                     magicLine.style.width = '0'; // Hide if no target link
+                     magicLine.style.opacity = '0';
+                     return;
+                 }
+
+                const containerRect = navLinksContainer.getBoundingClientRect();
+                const targetRect = targetLink.getBoundingClientRect();
+                const leftOffset = targetRect.left - containerRect.left + navLinksContainer.scrollLeft;
+
+                magicLine.style.width = `${targetRect.width}px`;
+                magicLine.style.left = `${leftOffset}px`;
+                magicLine.style.opacity = '1'; // Ensure it's visible
+            }
+
+            // Initial positioning of the magic line for the active link on this page
+             if (activeLink) {
+                setTimeout(() => moveMagicLine(activeLink), 100);
+            }
+
+             // Update magic line on link hover
+            navLinks.forEach(link => {
+                link.addEventListener('mouseenter', () => {
+                    if (window.innerWidth > 992) {
+                        moveMagicLine(link);
+                    }
+                });
+            });
+
+             // Move magic line back to active link when mouse leaves the nav links area
+            navLinksContainer.addEventListener('mouseleave', () => {
+                if (window.innerWidth > 992) {
+                    moveMagicLine(activeLink); // Move back to the page's specific active link
+                }
+            });
+
+             // Handle clicks (mostly for closing mobile menu, active state is page-based)
+             navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // No need to change active link via JS on click for this static page structure
+                    // Allow default navigation to occur
+
+                    // Close mobile menu if open
+                    if (navLinksContainer.classList.contains('active')) {
+                        navToggle.classList.remove('active');
+                        navLinksContainer.classList.remove('active');
+                        document.body.classList.remove('nav-open');
+                    }
+                });
+            });
+
+
+            // --- Hamburger Menu Toggle ---
+            if (navToggle) {
+                navToggle.addEventListener('click', () => {
+                    navToggle.classList.toggle('active');
+                    navLinksContainer.classList.toggle('active');
+                    document.body.classList.toggle('nav-open'); // Prevent body scroll
+
+                     // Hide/show magic line appropriately on mobile toggle
+                     if(navLinksContainer.classList.contains('active') && magicLine){
+                         magicLine.style.opacity = '0';
+                     } else if (magicLine) {
+                        moveMagicLine(activeLink); // Reset magic line on close
+                     }
+                });
+            }
+
+            // --- Recalculate Magic Line on Resize ---
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    moveMagicLine(activeLink); // Reposition based on the page's active link
+
+                     // Hide magic line immediately if switching to mobile view
+                     if (window.innerWidth <= 992 && magicLine) {
+                        magicLine.style.opacity = '0';
+                        magicLine.style.width = '0';
+                     } else if (magicLine && activeLink) {
+                        magicLine.style.opacity = '1'; // Ensure visible on desktop
+                     }
+                }, 250); // Debounce resize events
+            });
+
+             // NOTE: Intersection Observer logic for active link highlighting is removed
+             // as this page doesn't have the corresponding scroll sections from index.html.
+             // The active link is determined by the page itself.
+
         });
     </script>
 </body>
